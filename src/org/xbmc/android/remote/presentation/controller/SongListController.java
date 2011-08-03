@@ -159,6 +159,24 @@ public class SongListController extends ListController implements IController {
 		}
 	}
 	
+	public void update(Artist artist) {
+		mArtist = artist;
+		fetch();
+	}
+	
+	public void update(Album album) {
+		mAlbum = album;
+		fetch();
+				
+	}
+	
+	public void showAll() {
+		mArtist = null;
+		mGenre = null;
+		mAlbum = null;
+		fetch();
+	}
+	
 	private void fetch() {
 		final Album album = mAlbum; 
 		final Genre genre = mGenre; 
@@ -204,6 +222,19 @@ public class SongListController extends ListController implements IController {
 					}
 				}
 			}, genre, mActivity.getApplicationContext());
+		} else {
+			setTitle("Songs");
+			mMusicManager.getSongs(new DataResponse<ArrayList<Song>>() {
+				public void run() {
+					if (value.size() > 0) {
+						setTitle("Songs (" + value.size() + ")");
+						mList.setAdapter(new SongAdapter(mActivity, value));
+					} else {
+						setTitle("Songs");
+						setNoDataMessage("No songs found.", R.drawable.icon_song_dark);
+					}
+				}
+			}, mActivity.getApplicationContext());
 		}
 	}
 	

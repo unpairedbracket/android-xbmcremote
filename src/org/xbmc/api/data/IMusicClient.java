@@ -267,6 +267,14 @@ public interface IMusicClient extends IClient {
 	public Artist updateArtistInfo(INotifiableManager manager, Artist artist);
 	
 	/**
+	 * Returns a list containing all tracks in database. The list is sorted by filename.
+	 * @param sortBy Sort field, see SortType.* 
+	 * @param sortOrder Sort order, must be either SortType.ASC or SortType.DESC.	 
+	 * @return All tracks in database
+	 */
+	public ArrayList<Song> getSongs(INotifiableManager manager, int sortBy, String sortOrder);
+	
+	/**
 	 * Returns a list containing all tracks of an album. The list is sorted by filename.
 	 * @param album Album
 	 * @param sortBy Sort field, see SortType.* 

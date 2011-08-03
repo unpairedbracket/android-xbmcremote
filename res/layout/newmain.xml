@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout 
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_height="fill_parent"
+	android:id="@+id/rootLayout"
+	android:layout_width="fill_parent"
+	android:orientation="vertical"
+	android:padding="10dp"
+>
+		<LinearLayout 
+			xmlns:android="http://schemas.android.com/apk/res/android"
+			android:layout_height="fill_parent"
+			android:id="@+id/listLayouts"
+			android:layout_width="fill_parent"
+			android:layout_weight="1"
+			android:orientation="horizontal"
+			android:padding="0dp"
+		>
+				<FrameLayout
+					android:id="@+id/frame1"
+					android:layout_width="fill_parent"
+					android:layout_height="fill_parent"
+					android:layout_weight="1"
+					android:background="?android:attr/detailsElementBackground"
+				>
+				
+						<fragment  
+							android:name="org.xbmc.android.remote.presentation.fragment.ArtistFrag"
+							android:id="@+id/artistFrag"
+			    			android:layout_width="fill_parent" 
+			    			android:layout_height="fill_parent" 
+						/>
+				
+				</FrameLayout>
+		
+				
+				<FrameLayout
+					android:id="@+id/frame2"
+					android:layout_width="fill_parent"
+					android:layout_height="fill_parent"
+					android:layout_weight="1"
+					android:background="?android:attr/detailsElementBackground"
+				>
+					
+						<fragment
+							android:name="org.xbmc.android.remote.presentation.fragment.AlbumFrag"
+							android:id="@+id/albumFrag"
+							android:layout_width="fill_parent"
+							android:layout_height="fill_parent"
+						/>
+					
+				</FrameLayout>
+		
+				<FrameLayout
+					android:id="@+id/frame3"
+					android:layout_width="fill_parent"
+					android:layout_height="fill_parent"
+					android:layout_weight="1"
+					android:background="?android:attr/detailsElementBackground"
+				>
+				
+						<fragment  
+							android:name="org.xbmc.android.remote.presentation.fragment.SongFrag"
+							android:id="@+id/songFrag"
+			    			android:layout_width="fill_parent" 
+			    			android:layout_height="fill_parent" 
+						/>
+				
+				</FrameLayout>
+				
+		</LinearLayout>
+		
+		<FrameLayout
+			android:id="@+id/playerFrame"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:visibility="gone"
+			android:background="?android:attr/detailsElementBackground"
+		>
+		<!--
+    			<fragment 
+    				android:name="net.ben.subsonic.androidapp.activity.DownloadFrag"
+    				android:id="@+id/playerFrag"
+    				android:layout_width="match_parent"
+    				android:layout_height="wrap_content"
+    			/>
+    	-->
+    	</FrameLayout>
+
+</LinearLayout>

@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import org.xbmc.android.remote.R;
 import org.xbmc.android.remote.business.ManagerFactory;
 import org.xbmc.android.remote.presentation.activity.DialogFactory;
+import org.xbmc.android.remote.presentation.fragment.*;
 import org.xbmc.android.remote.presentation.activity.MusicArtistActivity;
 import org.xbmc.android.remote.presentation.widget.OneLabelItemView;
 import org.xbmc.android.util.ImportUtilities;
@@ -60,6 +61,8 @@ public class ArtistListController extends ListController implements IController 
 	public static final int ITEM_CONTEXT_INFO = 5;
 	
 	private boolean mLoadCovers = false;
+	private boolean mUsesFragments = false;
+	private FragmentUpdateListener fragmentListener;
 	private Genre mGenre;
 	private IMusicManager mMusicManager;
 	
@@ -68,6 +71,8 @@ public class ArtistListController extends ListController implements IController 
 		mMusicManager = ManagerFactory.getMusicManager(this);
 		
 		final String sdError = ImportUtilities.assertSdCard();
+		final FragmentUpdateListener mFragmentListener;
+		final boolean mFragments;
 		mLoadCovers = sdError == null;
 		
 		if (!isCreated()) {
@@ -78,6 +83,14 @@ public class ArtistListController extends ListController implements IController 
 				toast.show();
 			}
 			
+			if (activity instanceof FragmentUpdateListener) {
+				fragmentListener = (FragmentUpdateListener) activity;
+				mUsesFragments = true;
+			} else {
+				mUsesFragments = false;
+			}
+			mFragments = mUsesFragments;
+			mFragmentListener = fragmentListener;
 			mGenre = (Genre)mActivity.getIntent().getSerializableExtra(ListController.EXTRA_GENRE);
 			
 			mFallbackBitmap = BitmapFactory.decodeResource(mActivity.getResources(), R.drawable.icon_artist);
@@ -87,12 +100,16 @@ public class ArtistListController extends ListController implements IController 
 			mList.setOnItemClickListener(new OnItemClickListener() {
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 					if(isLoading()) return;
-					Intent nextActivity;
 					Artist artist = (Artist)mList.getAdapter().getItem(((OneLabelItemView)view).position);
-					nextActivity = new Intent(view.getContext(), MusicArtistActivity.class);
-					nextActivity.putExtra(ListController.EXTRA_LIST_CONTROLLER, new AlbumListController());
-					nextActivity.putExtra(ListController.EXTRA_ARTIST, artist);
-					mActivity.startActivity(nextActivity);
+					if (mFragments) {
+						mFragmentListener.updateAlbums(artist);
+					} else {
+						Intent nextActivity;
+						nextActivity = new Intent(view.getContext(), MusicArtistActivity.class);
+						nextActivity.putExtra(ListController.EXTRA_LIST_CONTROLLER, new AlbumListController());
+						nextActivity.putExtra(ListController.EXTRA_ARTIST, artist);
+						mActivity.startActivity(nextActivity);
+					}
 				}
 			});
 			

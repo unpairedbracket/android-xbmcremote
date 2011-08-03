@@ -28,6 +28,7 @@ import org.xbmc.android.remote.business.AbstractManager;
 import org.xbmc.android.remote.business.ManagerFactory;
 import org.xbmc.android.remote.presentation.activity.DialogFactory;
 import org.xbmc.android.remote.presentation.activity.ListActivity;
+import org.xbmc.android.remote.presentation.fragment.FragmentUpdateListener;
 import org.xbmc.android.remote.presentation.widget.ThreeLabelsItemView;
 import org.xbmc.android.util.ImportUtilities;
 import org.xbmc.api.business.DataResponse;
@@ -94,9 +95,11 @@ public class AlbumListController extends ListController implements IController {
 	
 	private IMusicManager mMusicManager;
 	private IControlManager mControlManager;
+	private FragmentUpdateListener fragmentListener;
 	
 	private boolean mCompilationsOnly = false;
 	private boolean mLoadCovers = false;
+	private boolean mUsesFragments = false;
 
 	private GridView mGrid = null;
 	
@@ -126,6 +129,8 @@ public class AlbumListController extends ListController implements IController {
 		((ISortableManager)mMusicManager).setPreferences(activity.getPreferences(Context.MODE_PRIVATE));
 		
 		final String sdError = ImportUtilities.assertSdCard();
+		final FragmentUpdateListener mFragmentListener;
+		final boolean mFragments;
 		mLoadCovers = sdError == null;
 
 		if (!isCreated()) {
@@ -136,6 +141,15 @@ public class AlbumListController extends ListController implements IController {
 				toast.show();
 			}
 			
+			if (activity instanceof FragmentUpdateListener) {
+				fragmentListener = (FragmentUpdateListener) activity;
+				mUsesFragments = true;
+			} else {
+				mUsesFragments = false;
+			}
+			mFragments = mUsesFragments;
+			mFragmentListener = fragmentListener;
+
 			mArtist = (Artist)activity.getIntent().getSerializableExtra(ListController.EXTRA_ARTIST);
 			mGenre = (Genre)activity.getIntent().getSerializableExtra(ListController.EXTRA_GENRE);
 			activity.registerForContextMenu(mList);
@@ -146,12 +160,16 @@ public class AlbumListController extends ListController implements IController {
 			mList.setOnItemClickListener(new OnItemClickListener() {
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 					if(isLoading()) return;
-					Intent nextActivity;
 					final Album album = (Album)mList.getAdapter().getItem(((ThreeLabelsItemView)view).position);
-					nextActivity = new Intent(view.getContext(), ListActivity.class);
-					nextActivity.putExtra(ListController.EXTRA_LIST_CONTROLLER, new SongListController());
-					nextActivity.putExtra(ListController.EXTRA_ALBUM, album);
-					mActivity.startActivity(nextActivity);
+					if (mFragments) {
+						mFragmentListener.updateSongs(album);
+					} else {
+						Intent nextActivity;
+						nextActivity = new Intent(view.getContext(), ListActivity.class);
+						nextActivity.putExtra(ListController.EXTRA_LIST_CONTROLLER, new SongListController());
+						nextActivity.putExtra(ListController.EXTRA_ALBUM, album);
+						mActivity.startActivity(nextActivity);
+					}
 				}
 			});
 			mList.setOnKeyListener(new ListControllerOnKeyListener<Album>());
@@ -210,6 +228,18 @@ public class AlbumListController extends ListController implements IController {
 
 	}
 	
+	public void update(Artist artist) {
+		mArtist = artist;
+		fetch();
+	}
+	
+	public void showAll() {
+		mArtist = null;
+		mGenre = null;
+		mCompilationsOnly = false;
+		fetch();
+	}
+	
 	private void fetch() {
 		final Artist artist = mArtist;
 		final Genre genre = mGenre;
@@ -243,37 +273,35 @@ public class AlbumListController extends ListController implements IController {
 				}
 			}, genre, mActivity.getApplicationContext());
 			
+		} else if (mCompilationsOnly) {				// compilations
+			setTitle("Compilations...");
+			showOnLoading();
+			mMusicManager.getCompilations(new DataResponse<ArrayList<Album>>() {
+				public void run() {
+					if (value.size() > 0) {
+						setTitle("Compilations (" + value.size() + ")");
+						setAdapter(value);
+					} else {
+						setTitle("Compilations");
+						setNoDataMessage("No compilations found.", R.drawable.default_album);
+					}
+				}
+			}, mActivity.getApplicationContext());
 		} else {
-			if (mCompilationsOnly) {				// compilations
-				setTitle("Compilations...");
-				showOnLoading();
-				mMusicManager.getCompilations(new DataResponse<ArrayList<Album>>() {
-					public void run() {
-						if (value.size() > 0) {
-							setTitle("Compilations (" + value.size() + ")");
-							setAdapter(value);
-						} else {
-							setTitle("Compilations");
-							setNoDataMessage("No compilations found.", R.drawable.default_album);
-						}
+			setTitle("Albums...");				// all albums
+			showOnLoading();
+			mMusicManager.getAlbums(new DataResponse<ArrayList<Album>>() {
+				public void run() {
+					if (value.size() > 0) {
+						setTitle("Albums (" + value.size() + ")");
+						setAdapter(value);
+					} else {
+						setTitle("Albums");
+						setNoDataMessage("No Albums found.", R.drawable.default_album);
 					}
-				}, mActivity.getApplicationContext());
-			} else {
-				setTitle("Albums...");				// all albums
-				showOnLoading();
-				mMusicManager.getAlbums(new DataResponse<ArrayList<Album>>() {
-					public void run() {
-						if (value.size() > 0) {
-							setTitle("Albums (" + value.size() + ")");
-							setAdapter(value);
-						} else {
-							setTitle("Albums");
-							setNoDataMessage("No Albums found.", R.drawable.default_album);
-						}
-					}
-				}, mActivity.getApplicationContext());
-			}
-		}
+				}
+			}, mActivity.getApplicationContext());
+		}		
 	}
 	
 	@Override

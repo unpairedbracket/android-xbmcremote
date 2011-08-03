@@ -71,6 +71,12 @@ public interface IMusicManager extends IManager {
 	public void getAlbums(final DataResponse<ArrayList<Album>> response, final Genre genre, final Context context);
 	
 	/**
+	 * Gets all songs from database
+	 * @param response Response object
+	 */
+	public void getSongs(final DataResponse<ArrayList<Song>> response, final Context context);
+	
+	/**
 	 * Gets all songs of an album from database
 	 * @param response Response object
 	 * @param album Album

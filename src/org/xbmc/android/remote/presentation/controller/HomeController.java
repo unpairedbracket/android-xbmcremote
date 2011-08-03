@@ -29,6 +29,7 @@ import java.util.Observer;
 import org.xbmc.android.remote.R;
 import org.xbmc.android.remote.business.AbstractManager;
 import org.xbmc.android.remote.business.ManagerFactory;
+import org.xbmc.android.remote.presentation.activity.FragActivity;
 import org.xbmc.android.remote.presentation.activity.GestureRemoteActivity;
 import org.xbmc.android.remote.presentation.activity.HomeActivity;
 import org.xbmc.android.remote.presentation.activity.HostSettingsActivity;
@@ -72,6 +73,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.net.wifi.WifiManager.WifiLock;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -281,7 +283,13 @@ public class HomeController extends AbstractController implements INotifiableCon
 						intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
 						break;
 					case HOME_ACTION_MUSIC:
-						intent = new Intent(v.getContext(), MusicLibraryActivity.class);
+						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+							Log.d(TAG, "Honeycomb++");
+							intent = new Intent(v.getContext(), FragActivity.class);
+						} else { 
+							Log.d(TAG, "This<Honeycomb");
+							intent = new Intent(v.getContext(), MusicLibraryActivity.class);
+						}
 						break;
 					case HOME_ACTION_VIDEOS:
 						intent = new Intent(v.getContext(), MovieLibraryActivity.class);

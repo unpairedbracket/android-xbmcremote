@@ -489,6 +489,21 @@ public class MusicClient extends Client implements IMusicClient {
 	}
 	
 	/**
+	 * Returns a list containing all tracks in the database. The list is sorted by filename.
+	 * @param sortBy Sort field, see SortType.* 
+	 * @param sortOrder Sort order, must be either SortType.ASC or SortType.DESC.	 
+	 * @return All tracks in database
+	 */
+	public ArrayList<Song> getSongs(INotifiableManager manager, int sortBy, String sortOrder) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("SELECT idSong, strTitle, strArtist, strAlbum, iTrack, iDuration, strPath, strFileName, strThumb");
+		sb.append(" FROM songview ");
+		sb.append(songsOrderBy(sortBy, sortOrder));
+		
+		return parseSongs(mConnection.query("QueryMusicDatabase", sb.toString(), manager));
+	}
+	
+	/**
 	 * Returns a list containing tracks of a certain condition.
 	 * @param sqlCondition SQL condition which tracks to return
 	 * @return Found tracks

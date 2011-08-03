@@ -129,6 +129,24 @@ public class MusicManager extends AbstractManager implements IMusicManager, ISor
 	}
 	
 	/**
+	 * Gets all songs from database
+	 * @param response Response object
+	 */
+	public void getSongs(final DataResponse<ArrayList<Song>> response, final Context context) {
+//		mHandler.post(new Runnable() {
+//			public void run() { 
+//				response.value = music(context).getSongs(MusicManager.this, album, getSortBy(SortType.ARTIST), getSortOrder());
+//				onFinish(response);
+//			}
+//		});
+		mHandler.post(new Command<ArrayList<Song>>(response, this) {
+			public void doRun() throws Exception{ 
+				response.value = music(context).getSongs(MusicManager.this, getSortBy(SortType.TITLE), getSortOrder());
+			}
+		});
+	}
+
+	/**
 	 * Gets all songs of an album from database
 	 * @param response Response object
 	 * @param album Album
