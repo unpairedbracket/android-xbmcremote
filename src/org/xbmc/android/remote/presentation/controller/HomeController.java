@@ -283,11 +283,10 @@ public class HomeController extends AbstractController implements INotifiableCon
 						intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
 						break;
 					case HOME_ACTION_MUSIC:
-						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-							Log.d(TAG, "Honeycomb++");
+						final boolean useFrags = PreferenceManager.getDefaultSharedPreferences(mActivity.getApplicationContext()).getBoolean("setting_use_experimental_music", false);
+						if (useFrags) {
 							intent = new Intent(v.getContext(), FragActivity.class);
 						} else { 
-							Log.d(TAG, "This<Honeycomb");
 							intent = new Intent(v.getContext(), MusicLibraryActivity.class);
 						}
 						break;
