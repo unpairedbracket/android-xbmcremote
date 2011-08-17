@@ -52,6 +52,7 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
 import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
@@ -123,7 +124,7 @@ public class SeasonListController extends ListController implements IController 
 				public void run() {
 					if(value.size() > 0) {
 						setTitle(show.title + " - Seasons (" + value.size() + ")");
-						mList.setAdapter(new SeasonAdapter(mActivity, value));
+						((AdapterView<ListAdapter>)mList).setAdapter(new SeasonAdapter(mActivity, value));
 					} else {
 						setNoDataMessage("No seasons found.", R.drawable.icon_movie_dark);
 					}

@@ -223,7 +223,7 @@ public class FileListController extends ListController implements IController {
     public void setListAdapter(ListAdapter adapter) {
         synchronized (this) {
             mAdapter = adapter;
-            mList.setAdapter(adapter);
+            ((AdapterView<ListAdapter>)mList).setAdapter(adapter);
         }
     }
 

@@ -44,6 +44,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListAdapter;
 
 public class MovieGenreListController extends ListController implements IController {
 	
@@ -86,7 +87,7 @@ public class MovieGenreListController extends ListController implements IControl
 					public void run() {
 						if (value.size() > 0) {
 							setTitle("Movie genres (" + value.size() + ")");
-							mList.setAdapter(new GenreAdapter(mActivity, value));
+							((AdapterView<ListAdapter>)mList).setAdapter(new GenreAdapter(mActivity, value));
 						} else {
 							setTitle("Movie genres");
 							setNoDataMessage("No genres found.", R.drawable.icon_genre_dark);
@@ -99,7 +100,7 @@ public class MovieGenreListController extends ListController implements IControl
 					public void run() {
 						if (value.size() > 0) {
 							setTitle("Tv Show genres (" + value.size() + ")");
-							mList.setAdapter(new GenreAdapter(mActivity, value));
+							((AdapterView<ListAdapter>)mList).setAdapter(new GenreAdapter(mActivity, value));
 						} else {
 							setTitle("Tv Show genres");
 							setNoDataMessage("No genres found.", R.drawable.icon_genre_dark);

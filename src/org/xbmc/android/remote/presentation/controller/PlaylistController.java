@@ -63,6 +63,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListAdapter;
 
 public class PlaylistController extends ListController implements IController, Callback {
 	
@@ -158,7 +159,7 @@ public class PlaylistController extends ListController implements IController, C
 						}
 						setTitle("Music playlist (" + (value.size() > MusicClient.PLAYLIST_LIMIT ? MusicClient.PLAYLIST_LIMIT + "+" : value.size()) + ")" );
 						mItemAdapter = new ItemAdapter(mPlaylistActivity, items);
-						mList.setAdapter(mItemAdapter);
+						((AdapterView<ListAdapter>)mList).setAdapter(mItemAdapter);
 						if (mCurrentPosition >= 0) {
 							mList.setSelection(mCurrentPosition);
 						}
@@ -187,7 +188,7 @@ public class PlaylistController extends ListController implements IController, C
 						}
 						setTitle("Video playlist (" + (value.size() > VideoClient.PLAYLIST_LIMIT ? VideoClient.PLAYLIST_LIMIT + "+" : value.size()) + ")" );
 						mItemAdapter = new ItemAdapter(mPlaylistActivity, items);
-						mList.setAdapter(mItemAdapter);
+						((AdapterView<ListAdapter>)mList).setAdapter(mItemAdapter);
 						if (mCurrentPosition >= 0) {
 							mList.setSelection(mCurrentPosition);
 						}

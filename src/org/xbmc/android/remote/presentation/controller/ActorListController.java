@@ -46,6 +46,7 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
@@ -88,7 +89,7 @@ public class ActorListController extends ListController implements IController {
 					public void run() {
 						if (value.size() > 0) {
 							setTitle("Actors (" + value.size() + ")");
-							mList.setAdapter(new ActorAdapter(mActivity, value));
+							((AdapterView<ListAdapter>)mList).setAdapter(new ActorAdapter(mActivity, value));
 						} else {
 							setTitle("Actors");
 							setNoDataMessage("No actors found.", R.drawable.icon_artist_dark);
@@ -102,7 +103,7 @@ public class ActorListController extends ListController implements IController {
 					public void run() {
 						if (value.size() > 0) {
 							setTitle("Movie actors (" + value.size() + ")");
-							mList.setAdapter(new ActorAdapter(mActivity, value));
+							((AdapterView<ListAdapter>)mList).setAdapter(new ActorAdapter(mActivity, value));
 						} else {
 							setTitle("Movie actors");
 							setNoDataMessage("No actors found.", R.drawable.icon_artist_dark);
@@ -116,7 +117,7 @@ public class ActorListController extends ListController implements IController {
 					public void run() {
 						if (value.size() > 0) {
 							setTitle("TV show actors (" + value.size() + ")");
-							mList.setAdapter(new ActorAdapter(mActivity, value));
+							((AdapterView<ListAdapter>)mList).setAdapter(new ActorAdapter(mActivity, value));
 						} else {
 							setTitle("TV show actors");
 							setNoDataMessage("No actors found.", R.drawable.icon_artist_dark);

@@ -61,6 +61,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListAdapter;
 
 public class MusicPlaylistController extends ListController implements IController, Callback {
 	
@@ -119,7 +120,7 @@ public class MusicPlaylistController extends ListController implements IControll
 						}
 						setTitle("Music playlist (" + (value.size() > MusicClient.PLAYLIST_LIMIT ? MusicClient.PLAYLIST_LIMIT + "+" : value.size()) + ")" );
 						mSongAdapter = new SongAdapter(activity, items);
-						mList.setAdapter(mSongAdapter);
+						((AdapterView<ListAdapter>)mList).setAdapter(mSongAdapter);
 						if (mCurrentPosition >= 0) {
 							mList.setSelection(mCurrentPosition);
 						}
