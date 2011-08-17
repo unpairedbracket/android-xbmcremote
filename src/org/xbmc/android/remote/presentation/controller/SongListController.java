@@ -53,6 +53,7 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
 import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
@@ -160,6 +161,7 @@ public class SongListController extends ListController implements IController {
 	}
 	
 	public void update(Artist artist) {
+		mAlbum = null;
 		mArtist = artist;
 		fetch();
 	}
@@ -182,13 +184,14 @@ public class SongListController extends ListController implements IController {
 		final Genre genre = mGenre; 
 		final Artist artist = mArtist; 
 		showOnLoading();
+		hideMessage();
 		if (album != null) {
 			setTitle("Songs...");
 			mMusicManager.getSongs(new DataResponse<ArrayList<Song>>() {
 				public void run() {
 					setTitle(album.name);
 					if (value.size() > 0) {
-						mList.setAdapter(new SongAdapter(mActivity, value));
+						((AdapterView<ListAdapter>)mList).setAdapter(new SongAdapter(mActivity, value));
 					} else {
 						setNoDataMessage("No songs found", R.drawable.icon_song_dark);
 					}
@@ -201,7 +204,7 @@ public class SongListController extends ListController implements IController {
 				public void run() {
 					if (value.size() > 0) {
 						setTitle(artist.name + " - Songs (" + value.size() + ")");
-						mList.setAdapter(new SongAdapter(mActivity, value));
+						((AdapterView<ListAdapter>)mList).setAdapter(new SongAdapter(mActivity, value));
 					} else {
 						setTitle(artist.name + " - Songs");
 						setNoDataMessage("No songs found.", R.drawable.icon_song_dark);
@@ -215,7 +218,7 @@ public class SongListController extends ListController implements IController {
 				public void run() {
 					if (value.size() > 0) {
 						setTitle(genre.name + " - Songs (" + value.size() + ")");
-						mList.setAdapter(new SongAdapter(mActivity, value));
+						((AdapterView<ListAdapter>)mList).setAdapter(new SongAdapter(mActivity, value));
 					} else {
 						setTitle(genre.name + " - Songs");
 						setNoDataMessage("No songs found.", R.drawable.icon_song_dark);
@@ -228,7 +231,7 @@ public class SongListController extends ListController implements IController {
 				public void run() {
 					if (value.size() > 0) {
 						setTitle("Songs (" + value.size() + ")");
-						mList.setAdapter(new SongAdapter(mActivity, value));
+						((AdapterView<ListAdapter>)mList).setAdapter(new SongAdapter(mActivity, value));
 					} else {
 						setTitle("Songs");
 						setNoDataMessage("No songs found.", R.drawable.icon_song_dark);
@@ -391,7 +394,7 @@ public class SongListController extends ListController implements IController {
 		public View getView(int position, View convertView, ViewGroup parent) {
 			final ThreeLabelsItemView view;
 			if (convertView == null) {
-				view = new ThreeLabelsItemView(mActivity, mMusicManager, parent.getWidth(), mFallbackBitmap, mList.getSelector(), false);
+				view = new ThreeLabelsItemView(mActivity, mMusicManager, parent.getWidth(), mFallbackBitmap, mList.getSelector(), true);
 			} else {
 				view = (ThreeLabelsItemView)convertView;
 			}

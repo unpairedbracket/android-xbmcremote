@@ -48,6 +48,7 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
 import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
@@ -102,7 +103,7 @@ public class ArtistListController extends ListController implements IController 
 					if(isLoading()) return;
 					Artist artist = (Artist)mList.getAdapter().getItem(((OneLabelItemView)view).position);
 					if (mFragments) {
-						mFragmentListener.updateAlbums(artist);
+						mFragmentListener.newArtist(artist);
 					} else {
 						Intent nextActivity;
 						nextActivity = new Intent(view.getContext(), MusicArtistActivity.class);
@@ -114,7 +115,7 @@ public class ArtistListController extends ListController implements IController 
 			});
 			
 			mList.setOnKeyListener(new ListControllerOnKeyListener<Artist>());			
-			
+			hideMessage();
 			if (mGenre != null) {
 				setTitle(mGenre.name + " - Artists...");
 				showOnLoading();
@@ -122,7 +123,7 @@ public class ArtistListController extends ListController implements IController 
 					public void run() {
 						if (value.size() > 0) {
 							setTitle(mGenre.name + " - Artists (" + value.size() + ")");
-							mList.setAdapter(new ArtistAdapter(mActivity, value));
+							((AdapterView<ListAdapter>)mList).setAdapter(new ArtistAdapter(mActivity, value));
 						} else {
 							setTitle(mGenre.name + " - Artists");
 							setNoDataMessage("No artists found.", R.drawable.icon_artist_dark);
@@ -136,7 +137,7 @@ public class ArtistListController extends ListController implements IController 
 					public void run() {
 						if (value.size() > 0) {
 							setTitle("Artists (" + value.size() + ")");
-							mList.setAdapter(new ArtistAdapter(mActivity, value));
+							((AdapterView<ListAdapter>)mList).setAdapter(new ArtistAdapter(mActivity, value));
 						} else {
 							setTitle("Artists");
 							setNoDataMessage("No artists found.", R.drawable.icon_artist_dark);
@@ -214,7 +215,7 @@ public class ArtistListController extends ListController implements IController 
 		public View getView(int position, View convertView, ViewGroup parent) {
 			final OneLabelItemView view;
 			if (convertView == null) {
-				view = new OneLabelItemView(mActivity, mMusicManager, parent.getWidth(), mFallbackBitmap, mList.getSelector(), false);
+				view = new OneLabelItemView(mActivity, mMusicManager, parent.getWidth(), mFallbackBitmap, mList.getSelector(), true);
 			} else {
 				view = (OneLabelItemView)convertView;
 			}

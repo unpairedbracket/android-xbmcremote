@@ -23,24 +23,33 @@ public class FragActivity extends Activity implements FragmentUpdateListener {
     	songs = (SongFrag) getFragmentManager().findFragmentById(R.id.songFrag);
 
 	}
+	
+	public void newArtist(Artist artist) {
+		updateAlbums(artist);
+		updateSongs(artist);
+	}
+
+	public void newAlbum(Album album) {
+		updateSongs(album);
+	}
 
 	public void updateAlbums(Artist artist) {
-		albums.update(artist);
-		
+		albums.update(artist);		
 	}
 
 	public void showAllAlbums() {
-		albums.showAll();
-		
+		albums.showAll();		
 	}
 
 	public void updateSongs(Album album) {
-		songs.update(album);
-		
+		songs.update(album);		
+	}
+	
+	public void updateSongs(Artist artist) {
+		songs.update(artist);		
 	}
 
 	public void showAllSongs() {
-		songs.showAll();
-		
+		songs.showAll();		
 	}
 }

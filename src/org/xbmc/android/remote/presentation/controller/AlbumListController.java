@@ -59,6 +59,7 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
 import android.widget.GridView;
 import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
@@ -162,7 +163,7 @@ public class AlbumListController extends ListController implements IController {
 					if(isLoading()) return;
 					final Album album = (Album)mList.getAdapter().getItem(((ThreeLabelsItemView)view).position);
 					if (mFragments) {
-						mFragmentListener.updateSongs(album);
+						mFragmentListener.newAlbum(album);
 					} else {
 						Intent nextActivity;
 						nextActivity = new Intent(view.getContext(), ListActivity.class);
@@ -180,7 +181,7 @@ public class AlbumListController extends ListController implements IController {
 	private void setAdapter(ArrayList<Album> value) {
 		switch (mCurrentView) {
 			case VIEW_LIST:
-				mList.setAdapter(new AlbumAdapter(mActivity, value));
+				((AdapterView<ListAdapter>)mList).setAdapter(new AlbumAdapter(mActivity, value));
 				mList.setVisibility(View.VISIBLE);
 				if (mGrid != null) {
 					mGrid.setVisibility(View.GONE);
@@ -193,7 +194,7 @@ public class AlbumListController extends ListController implements IController {
 					mList.setVisibility(View.GONE);
 				} else {
 					mList.setVisibility(View.VISIBLE);
-					mList.setAdapter(new AlbumAdapter(mActivity, value));
+					((AdapterView<ListAdapter>)mList).setAdapter(new AlbumAdapter(mActivity, value));
 				}
 			break;
 		}
@@ -243,6 +244,7 @@ public class AlbumListController extends ListController implements IController {
 	private void fetch() {
 		final Artist artist = mArtist;
 		final Genre genre = mGenre;
+		hideMessage();
 		if (artist != null) {						// albums of an artist
 			setTitle(artist.name + " - Albums...");
 			showOnLoading();
@@ -444,7 +446,7 @@ public class AlbumListController extends ListController implements IController {
 		public View getView(int position, View convertView, ViewGroup parent) {
 			final ThreeLabelsItemView view;
 			if (convertView == null) {
-				view = new ThreeLabelsItemView(mActivity, mMusicManager, parent.getWidth(), mFallbackBitmap, mList.getSelector(), false);
+				view = new ThreeLabelsItemView(mActivity, mMusicManager, parent.getWidth(), mFallbackBitmap, mList.getSelector(), true);
 			} else {
 				view = (ThreeLabelsItemView)convertView;
 			}
